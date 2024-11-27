@@ -55,4 +55,17 @@ class HashTable:
         
         return None
     
+    def get_all_packages(self) -> List[Package]:
+        """
+        Get all packages in the hash table.
+        Returns:
+            List of all Package objects in the hash table
+        """
+        packages = []
+        for bucket in self.table:
+            for key, package in bucket:
+                packages.append(package)
+        return packages
+    
+    
     
