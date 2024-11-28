@@ -3,7 +3,6 @@ from datetime import time
 from typing import Dict
 from .package import Package 
 
-
 class PackageLoader:
     def __init__(self):
         # Hash table for O(1) lookups

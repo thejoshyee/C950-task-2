@@ -80,7 +80,7 @@ class Truck:
         
         # Get distance to delivery address
         distance = distance_table.get_distance(
-            "Western Governors University",  # Try using full WGU name
+            "Western Governors University", 
             package.address
         )
         print(f"Got distance: {distance} miles")

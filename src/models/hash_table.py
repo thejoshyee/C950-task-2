@@ -7,7 +7,7 @@ class HashTable:
     Uses chaining for collision resolution.
     """
     def __init__(self, capacity: int = 40):
-        # Initializs empty table with given capacity
+        # Initializes empty table with given capacity
         self.capacity: int = capacity
         self.size: int = 0
         self.table: List[List[Package]] = [[] for _ in range(capacity)]
@@ -34,7 +34,7 @@ class HashTable:
                 self.table[slot][i] = (package_id, package)
                 return
         
-        #add new package
+        # add new package
         self.table[slot].append((package_id, package))
         self.size += 1
 

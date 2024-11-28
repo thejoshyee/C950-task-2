@@ -66,7 +66,7 @@ class DistanceTable:
                     
             # If we didn't find the source address
             if not source_row:
-                # Check if it's WGU (it won't be in raw_rows)
+                # Check if it's WGU,it won't be in raw_rows
                 if "Western Governors University" in address1:
                     # Find destination row and get its WGU distance
                     for row in self.raw_rows:
