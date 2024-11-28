@@ -50,46 +50,48 @@ class DistanceTable:
         except Exception as e:
             print(f"Error loading distances: {str(e)}")
 
+
     def get_distance(self, address1: str, address2: str) -> float:
-        """
-        Get distance between two addresses
-        Args:
-            address1: Source address
-            address2: Destination address
-        Returns:
-            Distance in miles, or 0.0 if addresses not found
-        """
+        """Get distance between two addresses"""
         try:
-            # Looking up distance TO WGU
-            if address2.strip() == "Western Governors University":
-                # Find the source address row
-                for row in self.raw_rows:
-                    if address1 in row[0]:
-                        # Return first distance value (column 2)
-                        try:
-                            return float(row[2])
-                        except (ValueError, IndexError):
-                            return 0.0
+            print(f"\nLooking up distance from {address1} to {address2}")
             
-            # For other addresses, find destination column in header
-            addr2_index = -1
+            # Find the row containing address1
+            source_row = None
+            for row in self.raw_rows:
+                if address1 in row[0]:
+                    source_row = row
+                    print(f"Found source row: {row}")
+                    break
+                    
+            # If we didn't find the source address
+            if not source_row:
+                # Check if it's WGU (it won't be in raw_rows)
+                if "Western Governors University" in address1:
+                    # Find destination row and get its WGU distance
+                    for row in self.raw_rows:
+                        if address2 in row[0]:
+                            distance = float(row[2])  # Distance TO WGU
+                            print(f"Found WGU distance: {distance}")
+                            return distance
+                return 0.0
+                
+            # If going TO WGU, use column 2
+            if "Western Governors University" in address2:
+                distance = float(source_row[2])
+                print(f"Distance to WGU: {distance}")
+                return distance
+                
+            # For other addresses, find column index
             for i, addr in enumerate(self.addresses):
                 if address2 in addr:
-                    addr2_index = i
-                    break
-            
-            if addr2_index != -1:
-                # Find source address row
-                for row in self.raw_rows:
-                    if address1 in row[0]:
-                        try:
-                            # Add 2 to index because we skipped first two columns
-                            return float(row[addr2_index + 2])
-                        except (ValueError, IndexError):
-                            return 0.0
-            
+                    # Add 2 because we skipped first two columns
+                    distance = float(source_row[i + 2])
+                    print(f"Regular distance: {distance}")
+                    return distance
+                    
             return 0.0
-            
+                
         except Exception as e:
             print(f"Error getting distance: {str(e)}")
             return 0.0
