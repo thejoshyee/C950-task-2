@@ -1,6 +1,7 @@
 import unittest
 from datetime import datetime, time
 from src.models.package_loader import PackageLoader
+from src.models.package import Package
 
 class TestPackageLoader(unittest.TestCase):
     def setUp(self):
@@ -63,6 +64,41 @@ class TestPackageLoader(unittest.TestCase):
         later_time = datetime(2024, 1, 1, 10, 30)
         package.update_address("410 S State St", later_time)
         self.assertEqual(package.address, "410 S State St")
+
+    def test_special_notes_handling(self):
+        """Test that special notes are handled correctly"""
+        # Create package with truck 2 requirement
+        package = Package(
+            package_id=3,
+            address="233 Canyon Rd",
+            deadline="EOD",
+            city="Salt Lake City",
+            zip_code="84103",
+            weight="2"
+        )
+        package.required_truck = 2
+        
+        # Create package that's delayed
+        delayed_package = Package(
+            package_id=6,
+            address="3060 Lester St",
+            deadline="10:30 AM",
+            city="West Valley City",
+            zip_code="84119",
+            weight="88"
+        )
+        delayed_package.delayed_until = time(9, 5)
+        
+        # Create grouped packages
+        group_package = Package(
+            package_id=14,
+            address="4300 S 1300 E",
+            deadline="10:30 AM",
+            city="Millcreek",
+            zip_code="84117",
+            weight="88"
+        )
+        group_package.grouped_with = [15, 19]
 
 if __name__ == '__main__':
     unittest.main()
