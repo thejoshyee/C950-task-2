@@ -1,6 +1,7 @@
 from typing import List, Optional
 from datetime import datetime, timedelta
 from .package import Package
+from .distance_table import DistanceTable
 
 class Truck:
     """
@@ -40,6 +41,30 @@ class Truck:
             package.mark_en_route(self.current_time)
             return True
         return False
+    
+    def find_nearest_package(self, distance_table: DistanceTable) -> Optional[Package]:
+        """
+        Find the nearest package from current location
+        Args:
+            distance_table: Table of distances between locations
+        Returns:
+            Nearest package or None if no packages left
+        """
+        nearest_package = None
+        shortest_distance = float("inf") #start with infinity
+
+        # check each package on truck
+        for package in self.packages:
+            if package.status != "Delivered":
+                # Get distance to this packages delivery address
+                distance = distance_table.get_distance(self.current_address, package.address)
+            
+            # if this is closer than what we've found so far
+            if distance < shortest_distance:
+                shortest_distance = distance
+                nearest_package = package
+            
+        return nearest_package
     
     
 
