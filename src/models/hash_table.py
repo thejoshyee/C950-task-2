@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 from .package import Package
 
 class HashTable:
@@ -10,7 +10,7 @@ class HashTable:
         # Initializes empty table with given capacity
         self.capacity: int = capacity
         self.size: int = 0
-        self.table: List[List[Package]] = [[] for _ in range(capacity)]
+        self.table: List[List[Tuple[int, Package]]] = [[] for _ in range(capacity)]
 
     def _hash(self, key: int) -> int:
         """
@@ -28,7 +28,7 @@ class HashTable:
         slot = self._hash(package_id)
 
         # Check if the package_id already exists 
-        for i, (key, exisiting_package) in enumerate(self.table[slot]):
+        for i, (key, existing_package) in enumerate(self.table[slot]):
             if key == package_id:
                 # Update existing package
                 self.table[slot][i] = (package_id, package)
@@ -66,6 +66,3 @@ class HashTable:
             for key, package in bucket:
                 packages.append(package)
         return packages
-    
-    
-    
