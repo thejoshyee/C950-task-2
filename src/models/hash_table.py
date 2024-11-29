@@ -21,9 +21,19 @@ class HashTable:
     def insert(self, package_id: int, package: Package) -> None:
         """
         Insert a package into the hash table using package_id as the key.
+
+        Inserts the following data components:
+        - delivery address (package.address)
+        - delivery deadline (package.deadline)
+        - delivery city (package.city)
+        - delivery zip code (package.zip_code)
+        - package weight (package.weight)
+        - delivery status (package.status: at hub, en route, delivered)
+        - delivery time (package.delivery_time if delivered)
+    
         Args:
             package_id: The unique ID of the package
-            package: The Package object to store
+            package: The Package object containing all delivery data
         """
         slot = self._hash(package_id)
 
@@ -34,7 +44,7 @@ class HashTable:
                 self.table[slot][i] = (package_id, package)
                 return
         
-        # add new package
+        # Add new package with all components
         self.table[slot].append((package_id, package))
         self.size += 1
 
@@ -43,15 +53,23 @@ class HashTable:
         Look up a package by its ID.
         Args:
             package_id: The ID of the package to find
+            
         Returns:
-            Package object if found, None if not found
+            Package object containing:
+            - delivery address
+            - delivery deadline
+            - delivery city
+            - delivery zip code
+            - package weight
+            - delivery status (at hub, en route, delivered)
+            - delivery time (if delivered)
         """
         slot = self._hash(package_id)
 
         # Search through the chain at this slot
         for key, package in self.table[slot]:
             if key == package_id:
-                return package
+                return package  # Returns Package with all required components
         
         return None
     

@@ -1,5 +1,5 @@
-# Student ID: 012285102
-
+# main.py
+# Student ID: 
 from datetime import datetime
 from src.models.delivery_service import DeliveryService
 
@@ -43,7 +43,7 @@ def main():
             # View all packages
             check_time = get_time_input()
             print(f"\nAll packages at {check_time.strftime('%I:%M %p')}:")
-            for i in range(1, 40):
+            for i in range(1, 41):  
                 status = service.get_package_status(i, check_time)
                 print(f"Package {i} status: {status}")
 

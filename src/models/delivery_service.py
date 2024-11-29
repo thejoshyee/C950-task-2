@@ -8,7 +8,18 @@ from .package import Package
 class DeliveryService:
     """
     Main Service managing the WGUPS delivery system.
-    Handles loading data, assigning packages, and running deliveries.
+    Process Flow:
+    1. Load package and distance data
+    2. Sort packages by priority:
+       - Early deadlines (9 AM)
+       - Morning deadlines (10:30 AM)
+       - Special requirements
+    3. Assign packages to trucks based on:
+       - Deadlines
+       - Truck restrictions
+       - Package groups
+    4. Optimize delivery routes using nearest neighbor
+    5. Track delivery status and mileage
     """
 
     def __init__(self):
@@ -282,7 +293,11 @@ class DeliveryService:
 
     def run_delivery_routes(self) -> None:
         """
-        Run all truck delivery routes using nearest neighbor algorithm
+        Run all truck delivery routes using nearest neighbor algorithm.
+        Process:
+        1. First assign packages to trucks based on constraints
+        2. Run optimized routes for each truck
+        3. Track total mileage (must stay under 140 miles)
         """
         # First assign packages
         self.assign_packages_to_trucks()
@@ -304,7 +319,15 @@ class DeliveryService:
         print(f"Total mileage: {self.total_mileage:.1f} miles")
 
     def run_truck_route(self, truck: Truck) -> None:
-        """Run delivery route for a single truck"""
+        """
+        Optimize package delivery using nearest neighbor algorithm:
+        1. Start at hub location
+        2. Find nearest undelivered package
+        3. Calculate travel time based on 18mph speed
+        4. Update package status and truck mileage
+        5. Repeat until all packages delivered
+        6. Return to hub        
+        """
         print(f"\nStarting route for Truck {truck.truck_id}")
         print(f"Start time: {truck.current_time.strftime('%I:%M %p')}")
 
