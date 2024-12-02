@@ -38,7 +38,7 @@ class Truck:
         """
         if len(self.packages) < self.MAX_CAPACITY:
             self.packages.append(package)
-            package.mark_en_route(self.current_time)
+            package.mark_en_route(self.current_time, self.truck_id)
             return True
         return False
     
@@ -134,7 +134,3 @@ class Truck:
             # update location and status
             self.current_address = self.HUB_ADDRESS
             self.status = self.STATUS_AT_HUB
-    
-
-
-    

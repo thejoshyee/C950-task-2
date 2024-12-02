@@ -18,6 +18,7 @@ class Package:
         self.delivery_time = None
         self.departure_time = None
         self.special_notes = None
+        self.truck_id = None
         
         # special handling attributes
         self.delayed_until = None
@@ -25,9 +26,10 @@ class Package:
         self.grouped_with: List[int] = []
         self.wrong_address = False
 
-    def mark_en_route(self, departure_time: datetime) -> None:
+    def mark_en_route(self, departure_time: datetime, truck_id: int) -> None:
         self.status = "En Route"
         self.departure_time = departure_time
+        self.truck_id = truck_id
 
     def mark_delivered(self, delivery_time: datetime) -> None:
         self.status = "Delivered"
