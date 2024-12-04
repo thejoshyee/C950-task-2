@@ -13,13 +13,13 @@ def get_time_input() -> datetime:
         except ValueError:
             print("Invalid time format. Please enter time in HH:MM format (e.g., 13:30)")
 
-def format_package_info(package, status: str) -> str:
-    """Format package information for display"""
+def format_package_info(package, status: str, current_time: datetime) -> str:
+    """Format package information for display"""    
     info = [
         f"Status: {status}",
-        f"Address: {package.address}",
+        f"Address: {package.get_current_address(current_time)}",
         f"City: {package.city}",
-        f"Zip: {package.zip_code}",
+        f"Zip: {package.get_current_zip(current_time)}",
         f"Weight: {package.weight}",
         f"Deadline: {'EOD' if package.deadline.hour == 17 else package.deadline.strftime('%I:%M %p')}"
     ]
@@ -30,7 +30,10 @@ def format_package_info(package, status: str) -> str:
     if package.required_truck:
         info.append(f"Note: Must be on truck {package.required_truck}")
     if package.wrong_address:
-        info.append("Note: Address will be corrected at 10:20 AM")
+        if current_time.time() < datetime(2024, 1, 1, 10, 20).time():
+            info.append("Note: Wrong address - will be corrected at 10:20 AM")
+        else:
+            info.append("Note: Address has been corrected")
     if package.grouped_with:
         info.append(f"Note: Must be delivered with package(s) {', '.join(map(str, package.grouped_with))}")
     
@@ -69,7 +72,7 @@ def main():
                 
                 status = service.get_package_status(package_id, check_time)
                 print(f"\nPackage {package_id} at {check_time.strftime('%I:%M %p')}:")
-                print(format_package_info(package, status))
+                print(format_package_info(package, status, check_time))
                 
             except ValueError:
                 print("Invalid input. Please enter a valid package ID.")
@@ -105,7 +108,7 @@ def main():
                     print(f"\n{'=' * 20} Truck {truck_id} {'=' * 20}")
                     for package, status in packages_by_truck[truck_id]:
                         print(f"\nPackage {package.package_id}:")
-                        print(format_package_info(package, status))
+                        print(format_package_info(package, status, check_time))
                         print("-" * 50)
             
             # Display unassigned packages
@@ -113,7 +116,7 @@ def main():
                 print(f"\n{'=' * 20} At Hub {'=' * 20}")
                 for package, status in unassigned:
                     print(f"\nPackage {package.package_id}:")
-                    print(format_package_info(package, status))
+                    print(format_package_info(package, status, check_time))
                     print("-" * 50)
 
         elif choice == "3":

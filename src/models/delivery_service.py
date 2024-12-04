@@ -362,6 +362,7 @@ class DeliveryService:
                     # Update wrong address at 10:20
                     if package.wrong_address and truck.current_time >= datetime(2024, 1, 1, 10, 20):
                         package.update_address("410 S State St", truck.current_time)
+                        package.update_zip("84111", truck.current_time)
                     
                     try:
                         distance = self.distance_table.get_distance(
